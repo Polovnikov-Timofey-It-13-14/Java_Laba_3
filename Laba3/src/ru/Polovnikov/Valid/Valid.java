@@ -1,6 +1,7 @@
 package ru.Polovnikov.Valid;
 
 public class Valid {
+    //Проверка на число (непустое, неотрицательное)
     public boolean isNumber(String str) {
         if (str == null || str.isEmpty()) {
             return false;
@@ -15,3 +16,4 @@ public class Valid {
         return true;
     }
 }
+
