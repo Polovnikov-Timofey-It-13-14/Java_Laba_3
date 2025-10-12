@@ -8,6 +8,7 @@ public class City {
     private String name;
     private Map<City, Integer> ways;
 
+    //Конструкторы
     public City(String name) {
         this.name = name;
         this.ways = new HashMap<>();
@@ -23,10 +24,11 @@ public class City {
         }
     }
 
+    //Создание города с дорогами
     public static City createWithRoads(String name, Object... roadData) {
         City city = new City(name);
         if (roadData.length % 2 != 0) {
-            return city; // Нечетное количество аргументов - ошибка
+            return city;
         }
 
         for (int i = 0; i < roadData.length; i += 2) {
@@ -38,6 +40,7 @@ public class City {
         return city;
     }
 
+    //Геттеры
     public String getName() {
         return name;
     }
@@ -45,11 +48,11 @@ public class City {
     public Map<City, Integer> getWays() {
         return new HashMap<>(ways);
     }
-
+    //Сеттер названия
     public void setName(String name) {
         this.name = name;
     }
-
+    //Метод добавления дорог
     public void addWays(City city, int way) {
         if (city == null) {
             throw new RuntimeException("Имя не может быть пустым");
@@ -68,7 +71,7 @@ public class City {
         ways.put(city, way);
         city.ways.put(this, way);
     }
-
+    //Метод удаления дорог
     public void removeRoad(City city) {
         if (city == null) {
             throw new RuntimeException("Имя не может быть пустым");
@@ -81,7 +84,7 @@ public class City {
         ways.remove(city);
         city.ways.remove(this);
     }
-
+    //Вывод дорог
     public static void printRoads(City... cities) {
         for (City city : cities) {
             System.out.print("   " + city.getName() + " → ");
@@ -100,20 +103,13 @@ public class City {
         }
     }
 
+    //Сравнение городов по дорогам
     @Override
     public boolean equals(Object obj) {
-        /*
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        City city = (City) obj;
-        return Objects.equals(name, city.name);
-
-         */
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
         City city = (City) obj;
 
-        // Сравниваем по наборам путей, а не по именам
         return sameWays(city);
     }
 
@@ -128,33 +124,15 @@ public class City {
         return result;
     }
 
+    //Метод проверяет одинаковые наборы дорог
     public boolean sameWays(City city) {
-        /*if (city == null)
-            return false;
-
-        int count = 0;
-
-        for (City neighbor : ways.keySet()) {
-            for (City otherNeighbor : city.ways.keySet()) {
-                if (neighbor.getName().equals(otherNeighbor.getName())) {
-                    count++;
-                    break;
-                }
-            }
-        }
-
-        return count == ways.size() && count == city.ways.size();
-
-         */
         if (city == null || this.ways.size() != city.ways.size())
             return false;
 
-        // Проверяем все дороги текущего города
         for (Map.Entry<City, Integer> entry : this.ways.entrySet()) {
             City target = entry.getKey();
             Integer distance = entry.getValue();
 
-            // Ищем дорогу к тому же городу с тем же расстоянием
             boolean found = false;
             for (Map.Entry<City, Integer> otherEntry : city.ways.entrySet()) {
                 if (otherEntry.getKey().getName().equals(target.getName()) &&
@@ -170,6 +148,7 @@ public class City {
         return true;
     }
 
+    //Вывод
     @Override
     public String toString() {
         String result = name;
@@ -184,4 +163,5 @@ public class City {
         }
         return result;
     }
+
 }
