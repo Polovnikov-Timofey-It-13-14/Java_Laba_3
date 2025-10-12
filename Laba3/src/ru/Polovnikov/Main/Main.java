@@ -104,20 +104,13 @@ public class Main {
                     A.addWays(D, 6);
                     A.addWays(F, 1);
 
-                    //B.addWays(A, 5);
                     B.addWays(C, 3);
 
-                    //C.addWays(B, 3);
                     C.addWays(D, 4);
-
-                    //D.addWays(A, 6);
-                    //D.addWays(C, 4);
+                    
                     D.addWays(E, 2);
 
                     E.addWays(F, 2);
-
-                    //F.addWays(B, 1);
-                    //F.addWays(E, 2);
 
                     City.printRoads(A, B, C, D, E, F);
 
