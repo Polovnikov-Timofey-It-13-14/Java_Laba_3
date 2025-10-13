@@ -93,15 +93,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return divide(new Fraction(num));
     }
 
-    //Сумма через интерфейс
-    public static double sumNumbers(Calculate... values) {
-        double sum = 0;
-        for (Calculate value : values) {
-            sum += value.decimal();
-        }
-        return sum;
-    }
-
     //Клонирование
     @Override
     public Fraction clone() {
@@ -157,3 +148,4 @@ public final class Fraction extends Number implements Calculate, Cloneable {
     }
 
 }
+
