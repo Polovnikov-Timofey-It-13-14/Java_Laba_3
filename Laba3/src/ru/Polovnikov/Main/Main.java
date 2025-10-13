@@ -176,28 +176,28 @@ public class Main {
 
                      */
                     System.out.println("6 Задание");
-                    Fraction[] values1 = {
+                    Calculate[] values1 = {
                             new Fraction(2),
                             new Fraction(3, 5),
                             new Fraction(2.3)
                     };
-                    double result1 = Fraction.sumNumbers(values1);
+                    double result1 = Calculate.sumNumbers(values1);
                     System.out.println("2 + 3/5 + 2.3 = " + result1);
-
-                    Fraction[] values2 = {
+                    
+                    Calculate[] values2 = {
                             new Fraction(3.6),
                             new Fraction(49, 12),
                             new Fraction(3),
                             new Fraction(3, 2)
                     };
-                    double result2 = Fraction.sumNumbers(values2);
+                    double result2 = Calculate.sumNumbers(values2);
                     System.out.println("3.6 + 49/12 + 3 + 3/2 = " + result2);
-
-                    Fraction[] values3 = {
+                    
+                    Calculate[] values3 = {
                             new Fraction(1, 3),
                             new Fraction(1)
                     };
-                    double result3 = Fraction.sumNumbers(values3);
+                    double result3 = Calculate.sumNumbers(values3);
                     System.out.println("1/3 + 1 = " + result3);
                     break;
 
