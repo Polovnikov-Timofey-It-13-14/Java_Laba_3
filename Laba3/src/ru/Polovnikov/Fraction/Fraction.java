@@ -6,7 +6,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
     private final int numerator;
     private final int denominator;
 
-    //Конструкторы
     public Fraction(int numerator, int denominator) {
         if (denominator == 0) {
             throw new RuntimeException("Знаменатель 0");
@@ -38,12 +37,10 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return denominator;
     }
 
-    //Вывод в вещественной форме
     public double decimal() {
         return (double) numerator / denominator;
     }
 
-    //Методы сложения (С дробью и с числом)
     public Fraction sum(Fraction x) {
         int newNum = this.numerator * x.denominator + x.numerator * this.denominator;
         int newDen = this.denominator * x.denominator;
@@ -54,7 +51,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return sum(new Fraction(num));
     }
 
-    //Методы вычитания (С дробью и с числом)
     public Fraction minus(Fraction x) {
         int newNum = this.numerator * x.denominator - x.numerator * this.denominator;
         int newDen = this.denominator * x.denominator;
@@ -65,7 +61,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return minus(new Fraction(num));
     }
 
-    //Методы умножения (С дробью и с числом)
     public Fraction multiply(Fraction x) {
         int newNum = this.numerator * x.numerator;
         int newDen = this.denominator * x.denominator;
@@ -76,7 +71,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return multiply(new Fraction(num));
     }
 
-    //Методы деления (С дробью и с числом)
     public Fraction divide(Fraction x) {
         if (x.denominator == 0) {
             throw new RuntimeException("Знаменатель 0");
@@ -93,7 +87,14 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return divide(new Fraction(num));
     }
 
-    //Клонирование
+    public static double sumNumbers(Calculate... values) {
+        double sum = 0;
+        for (Calculate value : values) {
+            sum += value.decimal();
+        }
+        return sum;
+    }
+
     @Override
     public Fraction clone() {
         try {
@@ -103,7 +104,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         }
     }
 
-    //Вывод
     @Override
     public String toString() {
         if (denominator == 1)
@@ -112,7 +112,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return numerator + "/" + denominator;
     }
 
-    //Методы "Number" для вывода разных типов данных
     @Override
     public int intValue() {
         return numerator / denominator;
@@ -133,7 +132,6 @@ public final class Fraction extends Number implements Calculate, Cloneable {
         return (double) numerator / denominator;
     }
 
-    //Сравнение
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -146,6 +144,4 @@ public final class Fraction extends Number implements Calculate, Cloneable {
     public int hashCode() {
         return 31 * numerator + denominator;
     }
-
 }
-
