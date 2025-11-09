@@ -8,8 +8,10 @@ public class City {
     private String name;
     private Map<City, Integer> ways;
 
-    //Конструкторы
     public City(String name) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Название города не может быть пустым");
+        }
         this.name = name;
         this.ways = new HashMap<>();
     }
@@ -17,30 +19,12 @@ public class City {
     public City(String name, Map<City, Integer> roads) {
         this(name);
         if (roads != null) {
-            for (City targetCity : roads.keySet()) {
-                int cost = roads.get(targetCity);
-                addWays(targetCity, cost);
+            for (Map.Entry<City, Integer> entry : roads.entrySet()) {
+                addWays(entry.getKey(), entry.getValue());
             }
         }
     }
 
-    //Создание города с дорогами
-    public static City createWithRoads(String name, Object... roadData) {
-        City city = new City(name);
-        if (roadData.length % 2 != 0) {
-            return city;
-        }
-
-        for (int i = 0; i < roadData.length; i += 2) {
-            if (roadData[i] instanceof City targetCity && roadData[i+1] instanceof Integer) {
-                int distance = (Integer) roadData[i+1];
-                city.addWays(targetCity, distance);
-            }
-        }
-        return city;
-    }
-
-    //Геттеры
     public String getName() {
         return name;
     }
@@ -48,43 +32,53 @@ public class City {
     public Map<City, Integer> getWays() {
         return new HashMap<>(ways);
     }
-    //Сеттер названия
-    public void setName(String name) {
-        this.name = name;
+
+    public void addWays(City city, int distance) {
+        validateCity(city);
+        if (distance <= 0) {
+            throw new IllegalArgumentException("Расстояние должно быть положительным");
+        }
+
+        // Проверка существования дороги
+        if (ways.containsKey(city)) {
+            throw new IllegalArgumentException("Дорога между " + name + " и " + city.name + " уже существует");
+        }
+
+        // Добавляем дорогу в обе стороны
+        this.ways.put(city, distance);
+        city.ways.put(this, distance);
     }
-    //Метод добавления дорог
-    public void addWays(City city, int way) {
-        if (city == null) {
-            throw new RuntimeException("Имя не может быть пустым");
-        }
-        if (city == this) {
-            throw new RuntimeException("Нельзя добавить дорогу из себя к себе");
-        }
-        if (way <= 0) {
-            throw new RuntimeException("Длина дороги не может быть меньше или равной 0");
+
+    public void removeWay(City city) {
+        validateCity(city);
+
+        // Проверка существования дороги
+        if (!ways.containsKey(city)) {
+            throw new IllegalArgumentException("Дорога между " + name + " и " + city.name + " не существует");
         }
 
-        if (ways.containsKey(city) || city.ways.containsKey(this)) {
-            throw new RuntimeException("Дорога между " + name + " и " + city.name + " уже существует");
-        }
-
-        ways.put(city, way);
-        city.ways.put(this, way);
-    }
-    //Метод удаления дорог
-    public void removeRoad(City city) {
-        if (city == null) {
-            throw new RuntimeException("Имя не может быть пустым");
-        }
-
-        if (ways.containsKey(city) || city.ways.containsKey(this)) {
-            throw new RuntimeException("Дорога между " + name + " и " + city.name + " не найдена");
-        }
-
-        ways.remove(city);
+        // Удаляем дорогу в обе стороны
+        this.ways.remove(city);
         city.ways.remove(this);
     }
-    //Вывод дорог
+
+    public boolean hasWayTo(City city) {
+        return ways.containsKey(city);
+    }
+
+    public Integer getDistanceTo(City city) {
+        return ways.get(city);
+    }
+
+    private void validateCity(City city) {
+        if (city == null) {
+            throw new IllegalArgumentException("Город не может быть null");
+        }
+        if (city == this) {
+            throw new IllegalArgumentException("Нельзя создать дорогу из города в себя");
+        }
+    }
+
     public static void printRoads(City... cities) {
         for (City city : cities) {
             System.out.print("   " + city.getName() + " → ");
@@ -103,38 +97,17 @@ public class City {
         }
     }
 
-    //Сравнение городов по дорогам
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass()) return false;
-        City city = (City) obj;
-
-        return sameWays(city);
-    }
-
-    @Override
-    public int hashCode() {
-        //return Objects.hash(name);
-        int result = 1;
-        for (Map.Entry<City, Integer> entry : ways.entrySet()) {
-            result = 31 * result + entry.getKey().getName().hashCode();
-            result = 31 * result + entry.getValue().hashCode();
-        }
-        return result;
-    }
-
-    //Метод проверяет одинаковые наборы дорог
-    public boolean sameWays(City city) {
-        if (city == null || this.ways.size() != city.ways.size())
+    public boolean sameWays(City other) {
+        if (other == null || this.ways.size() != other.ways.size()) {
             return false;
+        }
 
         for (Map.Entry<City, Integer> entry : this.ways.entrySet()) {
             City target = entry.getKey();
             Integer distance = entry.getValue();
 
             boolean found = false;
-            for (Map.Entry<City, Integer> otherEntry : city.ways.entrySet()) {
+            for (Map.Entry<City, Integer> otherEntry : other.ways.entrySet()) {
                 if (otherEntry.getKey().getName().equals(target.getName()) &&
                         otherEntry.getValue().equals(distance)) {
                     found = true;
@@ -148,20 +121,39 @@ public class City {
         return true;
     }
 
-    //Вывод
+    public boolean equalsByWays(Object obj) {
+        if (obj == null) return false;
+        if (obj instanceof City other) {
+            return sameWays(other);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        City city = (City) obj;
+        return Objects.equals(name, city.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
     @Override
     public String toString() {
-        String result = name;
+        StringBuilder sb = new StringBuilder(name);
         if (!ways.isEmpty()) {
-            result += " -> ";
+            sb.append(" -> ");
             boolean first = true;
-            for (Map.Entry<City, Integer> road : ways.entrySet()) {
-                if (!first) result += ", ";
-                result += road.getKey().name + ":" + road.getValue();
+            for (Map.Entry<City, Integer> entry : ways.entrySet()) {
+                if (!first) sb.append(", ");
+                sb.append(entry.getKey().name).append(":").append(entry.getValue());
                 first = false;
             }
         }
-        return result;
+        return sb.toString();
     }
-
 }
