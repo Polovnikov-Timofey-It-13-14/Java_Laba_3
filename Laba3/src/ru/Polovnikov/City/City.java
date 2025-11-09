@@ -39,12 +39,10 @@ public class City {
             throw new IllegalArgumentException("Расстояние должно быть положительным");
         }
 
-        // Проверка существования дороги
         if (ways.containsKey(city)) {
             throw new IllegalArgumentException("Дорога между " + name + " и " + city.name + " уже существует");
         }
 
-        // Добавляем дорогу в обе стороны
         this.ways.put(city, distance);
         city.ways.put(this, distance);
     }
@@ -52,12 +50,10 @@ public class City {
     public void removeWay(City city) {
         validateCity(city);
 
-        // Проверка существования дороги
         if (!ways.containsKey(city)) {
             throw new IllegalArgumentException("Дорога между " + name + " и " + city.name + " не существует");
         }
 
-        // Удаляем дорогу в обе стороны
         this.ways.remove(city);
         city.ways.remove(this);
     }
@@ -157,3 +153,4 @@ public class City {
         return sb.toString();
     }
 }
+
