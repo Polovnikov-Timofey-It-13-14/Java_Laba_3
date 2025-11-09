@@ -7,7 +7,6 @@ public class Way {
     private City start;
     private City finish;
 
-    //Конструктор
     public Way(City start, City finish) {
         if (start == null || finish == null) {
             throw new RuntimeException("Ошибка, нет точки начала или конца");
@@ -17,7 +16,6 @@ public class Way {
         this.finish = finish;
     }
 
-    //Геттеры
     public City getStart() {
         return start;
     }
@@ -26,7 +24,6 @@ public class Way {
         return finish;
     }
 
-    //Сеттеры
     public void setStart(City start) {
         if (start == null) {
             throw new RuntimeException("Ошибка, нет точки старта");
@@ -41,7 +38,6 @@ public class Way {
         this.finish = finish;
     }
 
-    //Поиск пути
     public City[] findWay() {
         if (start.equals(finish)) {
             return new City[]{start};
@@ -83,7 +79,6 @@ public class Way {
         return new City[0];
     }
 
-    //Построение пути от начала до конца
     public City[] build(Map<City, City> from) {
         int length = 0;
         City current = finish;
@@ -102,7 +97,6 @@ public class Way {
         return path;
     }
 
-    //Вывод
     @Override
     public String toString() {
         City[] route = findWay();
@@ -117,4 +111,3 @@ public class Way {
         return result;
     }
 }
-
